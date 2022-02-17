@@ -1,0 +1,23 @@
+{
+  "name": "0xdoodlesnft-contract",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "preinstall": "npm install -g solc",
+    "compile": "solcjs ./src/* --bin --abi -o dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amirmfallah/0xDoodlesNFT-contract.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amirmfallah/0xDoodlesNFT-contract/issues"
+  },
+  "homepage": "https://github.com/amirmfallah/0xDoodlesNFT-contract#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0"
+  }
+}
