@@ -9,7 +9,7 @@ const ganache = require("ganache");
 const MNEMONIC = process.env.MNEMONIC;
 const API_KEY = process.env.NODE_KEY;
 
-const NFT_CONTRACT_ADDRESS = "0xaB9988E77fC33231B66f135c2519c52026bf403B";
+const NFT_CONTRACT_ADDRESS = "0x6f086f7DA93B121Ae8f1aB8d1922524CC0bDF79E";
 const OWNER_ADDRESS = "0x1cCA0331423dB96bFb1c267f5F5BE859ACF0A06E";
 const MUMBAI = `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`;
 const MATIC = `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`;
@@ -47,11 +47,10 @@ async function withdraw() {
       from: OWNER_ADDRESS,
       to: NFT_CONTRACT_ADDRESS,
       nonce: nonce,
-      value: "50000000000000000000",
     };
 
     await nftContract.methods
-      .claimByOwner(50)
+      .mintTo("0x1a8F8B6f0E55A83BD27d12b54be5a65932f6834f", 1)
       .send(tx)
       .then((res) => {
         console.log(res);

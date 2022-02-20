@@ -56,6 +56,12 @@ contract XDoodlesNFTV3 is ERC721A, Ownable {
         _safeMint(msg.sender, quantity);
     }
 
+    function mintTo(address to,uint256 quantity) external payable onlyOwner{
+        uint256 supply = totalSupply();
+        require(supply + quantity <= TOTAL_SUPPLY, "Exceeds maximum supply");
+        _safeMint(to, quantity);
+    }
+
     function withdraw() external virtual onlyOwner {
         address payable ownerAddr = payable(owner());
         require(ownerAddr.send(address(this).balance));
