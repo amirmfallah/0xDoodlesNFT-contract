@@ -18,10 +18,10 @@
  *
  */
 
-const HDWalletProvider = require('@truffle/hdwallet-provider');
-require('dotenv').config()
-const MNEMONIC = process.env.MNEMONIC
-const API_KEY = process.env.NODE_KEY
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+require("dotenv").config();
+const MNEMONIC = process.env.MNEMONIC;
+const API_KEY = process.env.NODE_KEY;
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -34,7 +34,7 @@ module.exports = {
    */
 
   networks: {
-    development: {
+    dev: {
       host: "localhost",
       port: 8545,
       gas: 5000000,
@@ -42,20 +42,47 @@ module.exports = {
     },
     mumbai: {
       provider: function () {
-        return new HDWalletProvider(MNEMONIC, `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`);
+        return new HDWalletProvider(
+          MNEMONIC,
+          `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`
+        );
       },
       network_id: 80001,
       confirmations: 2,
-      skipDryRun: true
-
+      skipDryRun: true,
     },
     matic: {
       provider: function () {
-        return new HDWalletProvider(MNEMONIC, `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`);
+        return new HDWalletProvider(
+          MNEMONIC,
+          `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`
+        );
       },
       network_id: 137,
       gas: 5000000,
       gasPrice: 5000000000,
+      confirmations: 2,
+    },
+    main: {
+      provider: function () {
+        return new HDWalletProvider(
+          MNEMONIC,
+          `https://mainnet.infura.io/v3/eff0770e240c478bac80351b31dd5e97`
+        );
+      },
+      network_id: 1,
+      confirmations: 2,
+      gas: 1400000,
+      gasPrice: 50000000000,
+    },
+    rinkeby: {
+      provider: function () {
+        return new HDWalletProvider(
+          process.env.RINK,
+          "https://rinkeby.infura.io/v3/eff0770e240c478bac80351b31dd5e97"
+        );
+      },
+      network_id: 4,
       confirmations: 2,
     },
   },
@@ -68,7 +95,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.12",    // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.12", // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -77,7 +104,7 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
@@ -87,6 +114,6 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
 
   db: {
-    enabled: false
-  }
+    enabled: false,
+  },
 };

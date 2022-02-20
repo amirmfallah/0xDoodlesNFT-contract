@@ -1,54 +1,70 @@
-const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 const web3 = require("web3");
-const fs = require('fs');
+const fs = require("fs");
 const path = require("path");
-require('dotenv').config()
+require("dotenv").config();
+const ganache = require("ganache");
 
-const MNEMONIC = process.env.MNEMONIC
-const API_KEY = process.env.NODE_KEY
+//*vars
+const MNEMONIC = process.env.MNEMONIC;
+const API_KEY = process.env.NODE_KEY;
 
-const NFT_CONTRACT_ADDRESS = "0xC788fdc2b9EB8E1b940D6441EefDae31De0Bd1a1"
-const OWNER_ADDRESS = "0x18090cfACB9879B0d631eA6bF826D32A28d381EC";
-const MUMBAI = `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`
-const MATIC = `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`
-const NUM_ITEMS = 5;
+const NFT_CONTRACT_ADDRESS = "0xaB9988E77fC33231B66f135c2519c52026bf403B";
+const OWNER_ADDRESS = "0x1cCA0331423dB96bFb1c267f5F5BE859ACF0A06E";
+const MUMBAI = `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`;
+const MATIC = `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`;
 
-
-let rawdata = fs.readFileSync(path.resolve(__dirname, "../build/contracts/DoodlesNFTV3.json"));
+//* Remember to
+//*Parse the contract artifact for ABI reference.
+let rawdata = fs.readFileSync(
+  path.resolve(__dirname, "../build/contracts/XDoodlesNFTV3.json")
+);
 let contractAbi = JSON.parse(rawdata);
-const NFT_ABI = contractAbi.abi
+const NFT_ABI = contractAbi.abi;
 
 async function test() {
+  try {
+    //*define web3, contract and wallet instances
+    //const provider = new HDWalletProvider(MNEMONIC, MUMBAI);
 
-      try {
-            const provider = new HDWalletProvider(
-                  MNEMONIC, MUMBAI
-            );
-            const web3Instance = new web3(provider);
+    const web3Instance = new web3("http://127.0.0.1:8545");
+    const nftContract = new web3Instance.eth.Contract(
+      NFT_ABI,
+      NFT_CONTRACT_ADDRESS
+    );
+    const lastBlock = await web3Instance.eth.getBlock("latest");
+    console.log(lastBlock);
+    const nonce = await web3Instance.eth.getTransactionCount(
+      OWNER_ADDRESS,
+      "latest"
+    ); //get latest nonce
 
+    //the transaction
+    const tx = {
+      from: OWNER_ADDRESS,
+      to: NFT_CONTRACT_ADDRESS,
+      nonce: nonce,
+      value: "10000000000000000",
+    };
 
-            const nftContract = new web3Instance.eth.Contract(
-                  NFT_ABI,
-                  NFT_CONTRACT_ADDRESS,
-            );
-
-            //? Edit: Check the uri of token 1.
-
-                  await nftContract.methods
-                        .tokenURI(4).call().then((receipt) => {
-                              console.log(receipt)
-                        }).catch(err => console.log(err))
-
-      }
-
-      catch (e) {
-            console.log(e)
-      }
+    //* just mint
+    await nftContract.methods
+      .tokenURI(1)
+      .call()
+      .then((res) => {
+        console.log(res);
+        console.log("minted");
+      })
+      .catch((error) => console.log(error));
+  } catch (e) {
+    console.log(e);
+  }
 }
 
-
-test().then(() => process.exit(0))
-.catch(error => {
-  console.error(error);
-  process.exit(1);
-});
+//invoke
+test()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

@@ -22,7 +22,7 @@ let rawdata = fs.readFileSync(
 let contractAbi = JSON.parse(rawdata);
 const NFT_ABI = contractAbi.abi;
 
-async function main() {
+async function withdraw() {
   try {
     //*define web3, contract and wallet instances
     const provider = new HDWalletProvider(
@@ -47,25 +47,32 @@ async function main() {
       from: OWNER_ADDRESS,
       to: NFT_CONTRACT_ADDRESS,
       nonce: nonce,
-      value: "10000000000000000000",
     };
 
-    //* just mint
     await nftContract.methods
-      .mintItem(1)
+      .setBaseTokenURI("http://google.com/")
       .send(tx)
       .then((res) => {
         console.log(res);
         console.log("minted");
       })
       .catch((error) => console.log(error));
+
+    // await nftContract.methods
+    //   .withdraw()
+    //   .send(tx)
+    //   .then((res) => {
+    //     console.log(res);
+    //     console.log("minted");
+    //   })
+    //   .catch((error) => console.log(error));
   } catch (e) {
     console.log(e);
   }
 }
 
 //invoke
-main()
+withdraw()
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
