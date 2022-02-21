@@ -9,10 +9,11 @@ const ganache = require("ganache");
 const MNEMONIC = process.env.MNEMONIC;
 const API_KEY = process.env.NODE_KEY;
 
-const NFT_CONTRACT_ADDRESS = "0xaB9988E77fC33231B66f135c2519c52026bf403B";
-const OWNER_ADDRESS = "0x1cCA0331423dB96bFb1c267f5F5BE859ACF0A06E";
+const NFT_CONTRACT_ADDRESS = "0xa12e246d3A178DB0e9dBD7D3191e7Bf7a2BCA5a1";
+const OWNER_ADDRESS = "0xA2fBbffA2Cd06667AE0327d56C358D07f361d3e3";
 const MUMBAI = `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`;
 const MATIC = `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`;
+const rink = "https://rinkeby.infura.io/v3/eff0770e240c478bac80351b31dd5e97";
 
 //* Remember to
 //*Parse the contract artifact for ABI reference.
@@ -25,10 +26,11 @@ const NFT_ABI = contractAbi.abi;
 async function main() {
   try {
     //*define web3, contract and wallet instances
-    const provider = new HDWalletProvider(
-      "7ff96ffc5f48da630b13321f3d07e6a0834a7f50b7849a3c6bfe9682513f1012",
-      "http://127.0.0.1:8545"
-    );
+    // const provider = new HDWalletProvider(
+    //   "df5837c3e37941481d5eb5fad4fdfcdecd8eba4eab25c85e60b250f135dd6390",
+    //   "http://127.0.0.1:8545"
+    // );
+    const provider = new HDWalletProvider(MNEMONIC, rink);
 
     const web3Instance = new web3(provider);
     const nftContract = new web3Instance.eth.Contract(
@@ -36,7 +38,7 @@ async function main() {
       NFT_CONTRACT_ADDRESS
     );
     const lastBlock = await web3Instance.eth.getBlock("latest");
-    console.log(lastBlock);
+    //console.log(lastBlock);
     const nonce = await web3Instance.eth.getTransactionCount(
       OWNER_ADDRESS,
       "latest"
@@ -47,18 +49,27 @@ async function main() {
       from: OWNER_ADDRESS,
       to: NFT_CONTRACT_ADDRESS,
       nonce: nonce,
-      value: "10000000000000000000",
+      value: "0",
     };
 
-    //* just mint
     await nftContract.methods
-      .mintItem(1)
+      .setUriSuffix("")
       .send(tx)
       .then((res) => {
         console.log(res);
         console.log("minted");
       })
       .catch((error) => console.log(error));
+
+    //* just mint
+    // await nftContract.methods
+    //   .mintItem(1)
+    //   .send(tx)
+    //   .then((res) => {
+    //     console.log(res);
+    //     console.log("minted");
+    //   })
+    //   .catch((error) => console.log(error));
   } catch (e) {
     console.log(e);
   }

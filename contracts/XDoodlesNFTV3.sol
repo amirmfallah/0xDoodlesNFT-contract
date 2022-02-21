@@ -12,6 +12,7 @@ contract XDoodlesNFTV3 is ERC721A, Ownable {
     uint256 public TOTAL_SUPPLY = 10000;
     uint256 public MINT_PRICE = 0.01 ether;
     uint256 public FREE_ITEMS_COUNT = 1100;
+    string  public uriSuffix = "";
 
     constructor() ERC721A("XDoodlesNFTV3", "XDL3") {
         baseTokenURI = "https://api.mint0xDoodles.xyz/metadata/";
@@ -25,6 +26,10 @@ contract XDoodlesNFTV3 is ERC721A, Ownable {
         baseTokenURI = _baseTokenURI;
     }
 
+    function setUriSuffix(string memory _uriSuffix) public onlyOwner {
+        uriSuffix = _uriSuffix;
+    }
+
     function tokenURI(uint256 tokenId)
         public
         view
@@ -35,30 +40,30 @@ contract XDoodlesNFTV3 is ERC721A, Ownable {
         if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
 
         return
-            string(abi.encodePacked(_baseURI(), (tokenId + 10000).toString()));
+            string(abi.encodePacked(_baseURI(), (tokenId + 10000).toString(), uriSuffix));
     }
 
     function mintItem(uint256 quantity) external payable {
         uint256 supply = totalSupply();
         require((quantity > 0) && (quantity <= 10), "Invalid quantity.");
-        require(supply + quantity <= TOTAL_SUPPLY, "Exceeds maximum supply");
+        require(supply + quantity - 1 <= TOTAL_SUPPLY, "Exceeds maximum supply");
         require(
-            (supply + quantity <= FREE_ITEMS_COUNT) ||
+            (supply + quantity - 1 <= FREE_ITEMS_COUNT) ||
                 (msg.value >= MINT_PRICE * quantity),
-            "Not enought supply."
+            "Not enough supply."
         );
         _safeMint(msg.sender, quantity);
     }
 
     function claimByOwner(uint256 quantity) external payable onlyOwner {
         uint256 supply = totalSupply();
-        require(supply + quantity <= TOTAL_SUPPLY, "Exceeds maximum supply");
+        require(supply + quantity - 1 <= TOTAL_SUPPLY, "Exceeds maximum supply");
         _safeMint(msg.sender, quantity);
     }
 
     function mintTo(address to,uint256 quantity) external payable onlyOwner{
         uint256 supply = totalSupply();
-        require(supply + quantity <= TOTAL_SUPPLY, "Exceeds maximum supply");
+        require(supply + quantity - 1 <= TOTAL_SUPPLY, "Exceeds maximum supply");
         _safeMint(to, quantity);
     }
 

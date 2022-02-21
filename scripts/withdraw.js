@@ -50,7 +50,7 @@ async function withdraw() {
     };
 
     await nftContract.methods
-      .mintTo("0x1a8F8B6f0E55A83BD27d12b54be5a65932f6834f", 1)
+      .claimByOwner(5)
       .send(tx)
       .then((res) => {
         console.log(res);

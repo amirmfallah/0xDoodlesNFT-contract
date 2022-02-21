@@ -9,10 +9,11 @@ const ganache = require("ganache");
 const MNEMONIC = process.env.MNEMONIC;
 const API_KEY = process.env.NODE_KEY;
 
-const NFT_CONTRACT_ADDRESS = "0xaB9988E77fC33231B66f135c2519c52026bf403B";
-const OWNER_ADDRESS = "0x1cCA0331423dB96bFb1c267f5F5BE859ACF0A06E";
+const NFT_CONTRACT_ADDRESS = "0xa12e246d3A178DB0e9dBD7D3191e7Bf7a2BCA5a1";
+const OWNER_ADDRESS = "0xA2fBbffA2Cd06667AE0327d56C358D07f361d3e3";
 const MUMBAI = `https://rpc-mumbai.maticvigil.com/v1/${API_KEY}`;
 const MATIC = `https://rpc-mainnet.maticvigil.com/v1/${API_KEY}`;
+const rink = "https://rinkeby.infura.io/v3/eff0770e240c478bac80351b31dd5e97";
 
 //* Remember to
 //*Parse the contract artifact for ABI reference.
@@ -26,8 +27,10 @@ async function test() {
   try {
     //*define web3, contract and wallet instances
     //const provider = new HDWalletProvider(MNEMONIC, MUMBAI);
+    const provider = new HDWalletProvider(MNEMONIC, rink);
 
-    const web3Instance = new web3("http://127.0.0.1:8545");
+    const web3Instance = new web3(provider);
+    //const web3Instance = new web3("http://127.0.0.1:8545");
     const nftContract = new web3Instance.eth.Contract(
       NFT_ABI,
       NFT_CONTRACT_ADDRESS
@@ -49,7 +52,7 @@ async function test() {
 
     //* just mint
     await nftContract.methods
-      .tokenURI(1)
+      .tokenURI(0)
       .call()
       .then((res) => {
         console.log(res);

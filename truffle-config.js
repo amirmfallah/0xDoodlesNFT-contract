@@ -66,14 +66,12 @@ module.exports = {
     main: {
       provider: function () {
         return new HDWalletProvider(
-          MNEMONIC,
+          process.env.MAIN,
           `https://mainnet.infura.io/v3/eff0770e240c478bac80351b31dd5e97`
         );
       },
       network_id: 1,
       confirmations: 2,
-      gas: 1400000,
-      gasPrice: 50000000000,
     },
     rinkeby: {
       provider: function () {
